@@ -11,7 +11,7 @@ Ball[] ball = new Ball[N];
 
 void setup()
 {
-  size(1000, 1000);
+  size(700, 700);
   frameRate(60);
 
   // インスタンス生成
@@ -54,21 +54,17 @@ void collide()
       if(d < ball[i].r + ball[j].r)
       {
         float overlap = ball[i].r + ball[j].r - d; // ボールのめり込み量
-        PVector vector = PVector.sub(ball[i].position, ball[j].position); // ボール i からボール j へのベクトル
-        float angle = vector.heading(); // ベクトルの角度
+        PVector vector = PVector.sub(ball[i].position, ball[j].position); // ボール j からボール i へのベクトル        
         
-        vector.div(d); // ベクトルの正規化
-        
-        overlap /= 2.0; // ボールの移動量の計算
+        vector.normalize(); // ベクトルの正規化                
         
         // ボール同士が重ならない位置まで移動
-        ball[i].position.add(vector.mult(overlap));
-        ball[j].position.sub(vector.mult(overlap));
+        ball[i].position.add(vector.mult(overlap/2.0));
+        ball[j].position.sub(vector.mult(overlap/2.0));        
         
-        
-        // 速度の方向を変更
-        ball[i].velocity.rotate(-angle);
-        ball[j].velocity.rotate(-angle);
+        // 速度の方向を変更        
+        ball[i].velocity.rotate(random(0,TWO_PI));
+        ball[j].velocity.rotate(random(0,TWO_PI));
       }
     }
   }
@@ -94,7 +90,7 @@ class Ball
     position = new PVector(random(r, width - r), random(r, height - r));
 
     // 速度をランダムに初期化
-    velocity = new PVector(random(-10, 10), random(-10, 10));
+    velocity = new PVector(random(-300, 300)/frameRate, random(-300, 300)/frameRate);
     
     R = random(0,255);
     G = random(0,255);
